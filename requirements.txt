@@ -1,0 +1,16 @@
+requests
+sys
+tldextract                                            
+termcolor
+re    
+urllib.parse
+progressbar
+urlextract
+bs4
+os
+OpenSSL
+idna
+socket
+datetime
+ssl
+json
