@@ -1,3 +1,4 @@
+docx
 requests
 sys
 tldextract                                            

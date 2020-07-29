@@ -18,7 +18,7 @@ def aemscan(url):
 def aemrunner(domain):
 	path = "lib/payloads/aem-paths.txt"
 	file = open(path, "r")
-	print("AEM Scan Running..")
+	print(colored("AEM Scan Running..","green"))
 	i = k = 0
 	for url in file.readlines():
 	    url = ("https://" + domain + url).__str__().rstrip('\n')
@@ -29,7 +29,7 @@ def aemrunner(domain):
 	                k = 1 
 	        i = i + j
 	        if i == 10 and k == 0:
-	                print(colored("Not Vulnerable to AEM Vulnerability\n","green"))
+	                print(colored("\tNot Vulnerable to AEM Vulnerability\n","green"))
 	                break
 	    except Exception as e:
 	        print(e)

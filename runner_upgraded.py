@@ -23,7 +23,13 @@ import directory_listing
 from termcolor import colored
 
 
-#  COMMENT ADDED HERE
+#   VARIABLES HERE
+dom = ''
+url = ''
+port_num = 443
+digit = 0
+
+
 
 def general(url):
     ssl_socket_upgraded.runner(dom,port_num)
@@ -91,16 +97,45 @@ def standalone(port_num):
         print(e)
 
 
-if __name__ == '__main__':
-    digit = 0
-    dom = ''
-    url = ''
-    port_num = 443
+def exploiter():
     try:
-        print("USAGE:\n https://domain.com/path \n 255.255.255.255 ")
+        try:
+            general("https://" + url)
+        except Exception as e:
+            print("Error: " + e.__str__())
+            sys.exit(1)
+        standalone(port_num.__str__())
+    except KeyboardInterrupt:
+        print("Canceling script...")
+        sys.exit(1)
+
+# URL FORMER
+def url_former():
+    global url, dom, port_num, digit
+    for character in url:
+        if character.isdigit():
+            digit = digit + 1
+    if digit <= 3:
+        result = urlparse(url)
+        dom = result.netloc
+        url = result.netloc + ":" + port_num.__str__() + result.path
+    elif digit >= 4:
+        try: 
+            url,port_num = url.split(":")
+        except:
+            dom = url
+        url = url + ":" + port_num.__str__()
+    exploiter()
+
+
+
+def option2():
+    global url, dom, port_num
+    try:
+        print("\nUSAGE:\n https://domain.com/path \n 255.255.255.255 ")
         url = input("Enter the URL/IP Address: ")
         if url == "":
-            print("No Input. Exiting...")
+            print("No Input. Exiting...\n")
             sys.exit(1)
         url = url.__str__().rstrip('\n').rstrip(' ')
         port_num = input("Enter port(default 443): ")
@@ -108,36 +143,44 @@ if __name__ == '__main__':
             port_num = 443
         else:
             port_num = int(port_num)
-        for character in url:
-            if character.isdigit():
-                digit = digit + 1
-        if digit <= 3: #if digit is less then URL parsing is done
-            result = urlparse(url)
-            dom = result.netloc
-            url = result.netloc + ":" + port_num.__str__() + result.path
-        elif digit >= 4: # if digit is more considering IP received
-            dom = url
-            url = url + ":" + port_num.__str__()
         print("\n Fetching Scripts and Running Scanner\n\n")
-        try:
-            try:
-                general("https://" + url)
-                #print("passed")
-            except Exception as e:
-                print("Error: " + e.__str__())
-                sys.exit(1)
-            standalone(port_num.__str__())
-        except KeyboardInterrupt:
-            print("Canceling script...")
-            sys.exit(1)
+        url_former()
+
+    except KeyboardInterrupt:
+        print("Canceling script...")
+        sys.exit(1)
     except Exception as e:
         print("\nUSAGE:\n domain.com/path?query \n 255.255.255.255:port \nERROR : " + e.__str__() + "\n")
 
 
 
 
-
-
-
+#   MAIN FUNCTION
+if __name__ == '__main__':
+    try:
+        print("\n1. Read targets from file.")
+        print("2. Continue with interactive terminal mode.")
+        num = input("\nSelct an Option(1 or 2): ")
+        if int(num) == 1:
+            path = input("\nPlease provide the path to file: ")
+            file = open(path.__str__().rstrip('\n'), "r")
+            print("\n Fetching Scripts and Running Scanner\n\n")
+            for target in file:
+                print(target.__str__().rstrip('\n').rstrip(' '))
+                url = target.__str__().rstrip('\n').rstrip(' ')
+                url_former()
+        if int(num) == 2:
+            try:
+                option2()
+            except Exception as e:
+                print(e)
+                sys.exit(1)
+        else:
+            print("Invalid Input")
+            sys.exit(1)
+    except KeyboardInterrupt:
+        print("Canceling script...")
+    except Exception as e:
+        print(e)
 
 

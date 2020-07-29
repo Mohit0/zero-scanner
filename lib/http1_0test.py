@@ -20,6 +20,7 @@ def local(domain):
         links = urllib.parse.urlparse(links)
         if "10." in links.netloc or "192.168." in links.netloc or "172.16." in links.netloc or "172.31." in links.netloc:
             #print("Internal IP detected: " + links.netloc.__str__()  + "  Sent request with HTTP/1.0 to " + domain)
+            print(links.netloc)
             return links.netloc
         else:
             return 0 
