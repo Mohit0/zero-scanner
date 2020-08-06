@@ -43,7 +43,7 @@ def runner(domain):
         if (i == 1):
             break
     if i == 0:
-        print(colored("\tNot Vulnerable to Host Header Injection\n", "green"))
+        print(colored("\tNot Vulnerable to Host Header Injection\n", "white"))
 
 
 #domain = sys.argv[1].__str__().rstrip('\n')   
