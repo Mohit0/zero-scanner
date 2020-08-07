@@ -68,7 +68,7 @@ def print_status(host, context):
         print(colored('Issued domain: ' + context['issued_to'],"red"))
     else:
         print('Issued domain: ' + context['issued_to'])
-    print('Issued to: ' + context['issued_o'])
+    #print('Issued to: ' + context['issued_o'])
     print('Issued by: {} ({})'.format(context['issuer_o'], context['issuer_c']))
     print('Valid from: ' + context['valid_from'])
     print('Valid to: ' + context['valid_till'])
@@ -123,7 +123,7 @@ def analyze_ssl(host):
 
 
 def ciphers(url,port_num):
-    print(colored("Extracting Cipher Suites.  (Might take 60seconds to complete )", "green"))
+    print(colored("\nExtracting Cipher Suites.  (Might take 60seconds to complete )", "green"))
     cmd = "nmap -Pn -p " + port_num + " --script ssl-enum-ciphers " + url
     res = os.popen(cmd)
     for line in res:
@@ -140,7 +140,7 @@ def ciphers(url,port_num):
         if "VULNERALE" in line and "State" in line:
             print("\tVulnerable to SSL CCS Injection Vulnerability")
 
-    print(colored("\nChecking for Heartbleed Vulnerability", "green"))
+    print(colored("\nChecking for Heartbleed Vulnerability\n", "green"))
     cmd = "nmap -Pn -p " + port_num + " --script ssl-heartbleed " + url
     res = os.popen(cmd)
     for line in res:
@@ -159,7 +159,7 @@ def runner(domain,port_num):
     try:
         ciphers(domain,port_num.__str__())
     except Exception as e:
-        print("Error Occured with Nmap Library. Exitting")
+        print("Error Occured with Nmap Library. Exiting")
         sys.exit(1)
     try:
         analyze_ssl(domain)

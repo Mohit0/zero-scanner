@@ -20,7 +20,7 @@ def cves_check(url,port_num):
                 if "setsessiondata" in response.content.__str__().lower(): 
                     print(colored("\tRechecking responses: HOST VULNERRABLE\n","red"))
         else:
-            print(colored("\tNot Vulnerable\n" ,"green"))
+            print(colored("\tNot Vulnerable\n" ,"white"))
     except Exception as e:
         if "aborted" in str(e):
             print(colored("\tConnection Aborted by Server. Considering Not Vulnerable\n" ,"white"))

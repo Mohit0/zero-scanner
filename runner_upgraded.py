@@ -7,71 +7,54 @@ from urllib.parse import urlparse
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 import sys
+from termcolor import colored
+import tldextract
+
 
 sys.path.insert(1, 'lib')
+import general
 import ssl_socket_upgraded
-import popular_cve
-import aem
-import host_injection
 import host_header_injection
 import http1_0test
-import tldextract
+import popular_cve
 import XSS_scanner
+import aem
+
 
 sys.path.insert(1, 'scripts')
 import directory_listing
-from termcolor import colored
+
 
 
 #   VARIABLES HERE
 dom = ''
 url = ''
+path = '/'
 port_num = 443
 digit = 0
 
 
 
-def general(url):
-    ssl_socket_upgraded.runner(dom,port_num)
-    hearders = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0',
-                'Origin': 'testing.for.cors.com'}
-    print(colored("\nSending Requests to Server :  " + url, "green"))
-    res = requests.get(url, headers=hearders, verify=False)
-    if (res.status_code > 300) and (res.status_code < 303):
-        print("Redirection Found to" + res.headers['Location'])
-    if res.status_code == 200:
-        print(colored("200 Found on URL", "green"))
-        head = res.headers.__str__().lower()
-        if 'x-frame-options' in head or 'frame-option' in head:
-            value = res.headers['X-Frame-Options']
-            value = value.__str__().lower()
-            if ("sameorigin" not in value) and ("deny" not in value):
-                print(colored("X-Frame-Options Header " + "Currently set to: " + value, "yellow"))
-        if 'x-frame-options' not in head or 'frame-option' not in head:
-            print(colored("Vulnerable to Clickjacking Attack", "red"))
-        if "strict-transport-security" not in head:
-            print(colored("No HSTS Header Found", "red"))
-        if 'access-control-allow-origin' in head:
-            if res.headers['Access-Control-Allow-Origin'] == '*':
-                print(colored("Wild Card Used for CORS", "yellow"))
-            elif 'testing.for.cors.com' in res.headers['Access-Control-Allow-Origin']:
-                print(colored("CORS Exploitable", "red"))
-        if 'server' in head:
-            try:
-                var = res.headers['server']
-                if any(char.isdigit() for char in var):
-                    print(colored("Server Version Leakage Identified VERSION : " + res.headers['server'], "red"))
-                else:
-                    print(colored("Server Details identified : " + res.headers['server'], "yellow"))
-            except:
-                pass
-        print("\n")
+def exploiter():
+    try:
+        try:
+            general.general("https://" + url)
+            print(colored("Performing SSL checks.","green"))
+            ssl_socket_upgraded.runner(dom,port_num)
+        except Exception as e:
+            print("Error: " + e.__str__())
+            sys.exit(1)
+        standalone(port_num.__str__())
+    except KeyboardInterrupt:
+        print("Canceling script...")
+        sys.exit(1)
+
 
 
 def standalone(port_num):
     try:
         #print("Passed Host Header")
-        host_header_injection.runner(dom + ":" + port_num)
+        host_header_injection.runner(dom, port_num ,path)
     except Exception as e:
         print("Exception with host Header Injection:  ")
         print(e)
@@ -110,28 +93,16 @@ def standalone(port_num):
         print(e)
 
 
-def exploiter():
-    try:
-        try:
-            general("https://" + url)
-            #print("Passed GENERAL")
-        except Exception as e:
-            print("Error: " + e.__str__())
-            sys.exit(1)
-        standalone(port_num.__str__())
-    except KeyboardInterrupt:
-        print("Canceling script...")
-        sys.exit(1)
-
 # URL FORMER
 def url_former():
-    global url, dom, port_num, digit
+    global url, dom, port_num, digit, path
     for character in url:
         if character.isdigit():
             digit = digit + 1
     if digit <= 3:
         result = urlparse(url)
         dom = result.netloc
+        path = result.path.__str__()
         url = result.netloc + ":" + port_num.__str__() + result.path
     elif digit >= 4:
         try: 
@@ -139,6 +110,7 @@ def url_former():
         except:
             dom = url
         url = url + ":" + port_num.__str__()
+    print(colored("Host= " + dom + "\nPort Number= " + str(port_num) + "\nURL Formed = " + url + "\n", "blue"))
     exploiter()
 
 
@@ -157,15 +129,13 @@ def option2():
             port_num = 443
         else:
             port_num = int(port_num)
-        print("\n Fetching Scripts and Running Scanner\n\n")
+        print(colored("\nFetching Scripts and Running Scanner\n", "green"))
         url_former()
-
     except KeyboardInterrupt:
         print("Canceling script...")
         sys.exit(1)
     except Exception as e:
         print("\nUSAGE:\n domain.com/path?query \n 255.255.255.255 \nERROR : " + e.__str__() + "\n")
-
 
 
 
@@ -196,5 +166,15 @@ if __name__ == '__main__':
         print("Canceling script...")
     except Exception as e:
         print(e)
+
+
+
+
+
+
+
+
+
+
 
 

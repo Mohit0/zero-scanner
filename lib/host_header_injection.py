@@ -31,15 +31,15 @@ def check(url):
         else:
             return int(0)
 
-def runner(domain):
+def runner(domain, port_num, path):
     i=0
     print(colored("Validating Host Header Injection", "green"))
-    payloads =  ["/" , "?host_header=X-Forwarded-Host" , "?host_header=Host"]
+    payloads =  [" " , "?host_header=Host" , "?host_header=X-Forwarded-Host"]
     for payload in payloads:
-        i = check("https://" + domain + payload)
+        i = check("https://" + domain + ":" + str(port_num) + path + payload)
         if (i == 1):
             break
-        i = check("http://" + domain + payload)
+        i = check("http://" + domain + ":" + str(port_num) + path + payload)
         if (i == 1):
             break
     if i == 0:
