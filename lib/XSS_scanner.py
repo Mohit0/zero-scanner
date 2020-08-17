@@ -1,6 +1,8 @@
 #   Usage: python3 XSS_scanner.py http://testphp.vulnweb.com/
 
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from pprint import pprint
 from bs4 import BeautifulSoup as bs
 from urllib.parse import urljoin
@@ -8,7 +10,7 @@ import sys
 
 
 def get_all_forms(url):
-    soup = bs(requests.get(url).content, "html.parser")
+    soup = bs(requests.get(url, verify=False, timeout=(10, 27)).content, "html.parser")
     return soup.find_all("form")
 
 
@@ -40,9 +42,9 @@ def submit_form(form_details, url, value):
             data[input_name] = input_value
 
     if form_details["method"] == "post":
-        return requests.post(target_url, data=data)
+        return requests.post(target_url, data=data, verify=False, timeout=(10, 27))
     else:
-        return requests.get(target_url, params=data)
+        return requests.get(target_url, params=data, verify=False, timeout=(10, 27))
 
 
 def scan_xss(url):
@@ -57,7 +59,7 @@ def scan_xss(url):
         if js_payload in content:
             print(f"XSS Detected on {url}")
             print(f"Form details:")
-            print(form_details)
+            print(json.dumps(dict(form_details), sort_keys=True, indent=4))
             is_vulnerable = True
     return is_vulnerable
 

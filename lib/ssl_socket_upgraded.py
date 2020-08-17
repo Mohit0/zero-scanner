@@ -151,7 +151,7 @@ def ciphers(url,port_num):
 
 def runner(domain,port_num):
     try:
-        cert = get_cert(domain , port_num)
+        cert = get_cert(domain ,int(port_num))
         cont = get_cert_info(domain, cert)
         print_status(domain, cont)
     except Exception as e:

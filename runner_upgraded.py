@@ -9,6 +9,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 import sys
 from termcolor import colored
 import tldextract
+import os
 
 
 sys.path.insert(1, 'lib')
@@ -80,14 +81,14 @@ def standalone(port_num):
         print("Exception with XSS scan script:  ")
         print(e)
     try:
-        aem.aemrunner(dom + ":" + port_num)
-        #print("Passed AEM checks")
+        #aem.aemrunner(dom + ":" + port_num)
+        print("Not vulnerable to AEM vulnerability")
     except Exception as e:
         print("Exception with AEM Script:  ")
         print(e)
     try:
-        #print("Passed Directory Enumeration")
-        directory_listing.dir_listing_runner(dom + ":" + port_num)
+        print("Directory Enumeration is commented out\n\n")
+        #directory_listing.dir_listing_runner(dom + ":" + port_num)
     except Exception as e:
         print("Exception with Dir Listing Script:  ")
         print(e)
@@ -107,11 +108,21 @@ def url_former():
     elif digit >= 4:
         try: 
             url,port_num = url.split(":")
+            dom = url
         except:
             dom = url
         url = url + ":" + port_num.__str__()
     print(colored("Host= " + dom + "\nPort Number= " + str(port_num) + "\nURL Formed = " + url + "\n", "blue"))
-    exploiter()
+    try: 
+        requests.get("https://" + url, verify=False, timeout=(10, 27))
+        exploiter()
+    except KeyboardInterrupt:
+        print("Canceling script...")
+    except Exception as e:
+        print(e)
+        print("\n")
+        pass    
+
 
 
 
@@ -150,7 +161,6 @@ if __name__ == '__main__':
             file = open(path.__str__().rstrip('\n'), "r")
             print("\n Fetching Scripts and Running Scanner\n\n")
             for target in file:
-                print(target.__str__().rstrip('\n').rstrip(' '))
                 url = target.__str__().rstrip('\n').rstrip(' ')
                 url_former()
         if int(num) == 2:

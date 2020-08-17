@@ -5,8 +5,10 @@ from pprint import pprint
 from bs4 import BeautifulSoup as bs
 from urllib.parse import urljoin
 import sys
+import json
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 
 
 def get_all_forms(url):
@@ -59,17 +61,16 @@ def scan_xss(url):
         if js_payload in content:
             print(f"XSS Detected on {url}")
             print(f"Form details:")
-            print(form_details)
+            print(json.dumps(dict(form_details), sort_keys=True, indent=4))
             is_vulnerable = True
     return is_vulnerable
 
-url = sys.argv[1]
-url = "https://unitedhealthgroup.com"
-from selenium.webdriver.chrome.options import Options
 
+url = "https://unitedhealthgroup.com"
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(executable_path='/home/kali/Desktop/scanner/new/chromedriver', chrome_options=chrome_options)
 driver.get(url)
 
+#url = sys.argv[1]
 #print(scan_xss(url))

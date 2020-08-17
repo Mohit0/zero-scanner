@@ -1,4 +1,6 @@
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from termcolor import colored
 import json
 
@@ -9,11 +11,11 @@ def general(url):
                 'Origin': 'testing.for.cors.com'}
     print(colored("Sending Requests to Server :  " + url, "green"))
     print("\n")
-    res = requests.get(url, headers=hearders, verify=False)
+    res = requests.get(url, headers=hearders, verify=False, timeout=(10, 27))
     print(colored("Found " + res.status_code.__str__() + " Response Code", "green"))
-    print(colored("Response Headers: ", "green"))
-    print(json.dumps(dict(res.headers), sort_keys=True, indent=4))
-    print("\n")
+    #print(colored("Response Headers: ", "green"))
+    #print(json.dumps(dict(res.headers), sort_keys=True, indent=4))
+    #print("\n")
     if (res.status_code > 300) and (res.status_code < 303):
         print("Redirection Found to" + res.headers['Location'])
     if res.status_code:
