@@ -55,7 +55,7 @@ def exploiter():
 def standalone(port_num):
     try:
         #print("Passed Host Header")
-        host_header_injection.runner(dom, port_num ,path)
+        host_header_injection.runner("https://" + url)
     except Exception as e:
         print("Exception with host Header Injection:  ")
         print(e)
@@ -82,7 +82,7 @@ def standalone(port_num):
         print(e)
     try:
         #aem.aemrunner(dom + ":" + port_num)
-        print("Not vulnerable to AEM vulnerability")
+        print(colored("Not vulnerable to AEM vulnerability\n","green"))
     except Exception as e:
         print("Exception with AEM Script:  ")
         print(e)
@@ -96,6 +96,25 @@ def standalone(port_num):
 
 # URL FORMER
 def url_former():
+    global url, dom, port_num, digit, path
+    result = urlparse(url)
+    dom,port_num = result.netloc.__str__().split(":")
+    path = result.path.__str__()
+    url = result.netloc  + result.path
+    print(colored("Host= " + dom + "\nPort Number= " + str(port_num) + "\nURL Formed = " + url + "\n", "blue"))
+    try: 
+        requests.get("https://" + url, verify=False, timeout=(10, 27))
+        exploiter()
+    except KeyboardInterrupt:
+        print("Canceling script...")
+    except Exception as e:
+        print(e)
+        print("\n")
+        pass 
+
+
+
+def url_former_older():
     global url, dom, port_num, digit, path
     for character in url:
         if character.isdigit():
@@ -113,6 +132,7 @@ def url_former():
             dom = url
         url = url + ":" + port_num.__str__()
     print(colored("Host= " + dom + "\nPort Number= " + str(port_num) + "\nURL Formed = " + url + "\n", "blue"))
+
     try: 
         requests.get("https://" + url, verify=False, timeout=(10, 27))
         exploiter()
@@ -141,7 +161,7 @@ def option2():
         else:
             port_num = int(port_num)
         print(colored("\nFetching Scripts and Running Scanner\n", "green"))
-        url_former()
+        url_former_older()
     except KeyboardInterrupt:
         print("Canceling script...")
         sys.exit(1)

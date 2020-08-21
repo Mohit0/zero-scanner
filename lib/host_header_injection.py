@@ -1,50 +1,46 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import requests
+from urllib.parse import urlparse
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 import sys
 from termcolor import colored
+import tldextract
+import os
+import json
 
 
 def check(url):
-    #print(url)
     hearders = {'Host': 'HackeR.CoM', 'X-Forwarded-Host':'HackeR.CoM'}
     try:
-        res = requests.get(url, headers=hearders, allow_redirects=False, verify=False) 
-        #print(res)
+        res = requests.get(url, headers=hearders, allow_redirects=False, verify=False, timeout=(5, 27)) 
+        #print(colored("Found " + res.status_code.__str__() + " Response Code", "green"))
     except Exception as e:
-        #print (e)
-        return int(0) 
+        print(e)
+        print("\n")
     
     if res.status_code == 302 or res.status_code == 301:
-        if "HackeR.CoM" in res.headers['Location']:
-            print(colored("\tVulnerable to Host Header Injection\n", "red"))
-            #print(res.headers['Location'])
-            return int(1)
-        else:
-            return int(0)
-    elif res.status_code == 200:
-        if "HackeR.CoM" in res.content.__str__():
-            print(colored("\tVulnerable to Host Header Injection with Web Cache Poisoning\n","red"))
-            #print(res.content)
-            return int(1)
-        else:
-            return int(0)
+        if "HackeR.CoM" in res.headers['Location'] or "hacker.com" in res.headers['Location']:
+            print(colored("\tVulnerable to Host Header Injection\n\n", "red"))
+            print(colored("Response Headers: ", "green"))
+            print(json.dumps(dict(res.headers), sort_keys=True, indent=4))
 
-def runner(domain, port_num, path):
+    elif res.status_code == 200:
+        if "HackeR.CoM" in res.content.__str__() or "hacker.com" in res.content.__str__():
+            print(colored("\tVulnerable to Host Header Injection with Web Cache Poisoning\n\n","red")) 
+    
+
+def runner(domain):
+    print(colored("Checking Host Header Injection\n", "green"))
     i=0
-    print(colored("Validating Host Header Injection", "green"))
     payloads =  [" " , "?host_header=Host" , "?host_header=X-Forwarded-Host"]
     for payload in payloads:
-        i = check("https://" + domain + ":" + str(port_num) + path + payload)
-        if (i == 1):
-            break
-        i = check("http://" + domain + ":" + str(port_num) + path + payload)
-        if (i == 1):
-            break
-    if i == 0:
-        print(colored("\tNot Vulnerable to Host Header Injection\n", "white"))
+        #print(colored(domain + payload, "green"))
+        check(domain + payload)
+    print("\n")
 
 
-#domain = sys.argv[1].__str__().rstrip('\n')   
-#runner(domain)
+
+

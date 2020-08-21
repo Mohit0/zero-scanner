@@ -29,9 +29,17 @@ def exploit(url, cmd):
     try:
         url = "https://" + url + "/"
         out = requests.get(url, headers=hearders, allow_redirects=False, verify=False, timeout=(10, 27)).text
+        i = 0
+        for line in out.__str__():
+            i = i+1
+
+        if i < 30:
+            print(i)
+        else:
+            print("Struts Not Found")
+
     except Exception as e:
-        out =  str(e)
-    print(out)
+        print(e)
 
 # def runner():
 #     if len(sys.argv) != 3:
