@@ -3,6 +3,8 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from termcolor import colored
 import json
+import dns.resolver
+from emailprotectionslib import spf,dmarc
 
 def general(url):
     hearders = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0',
@@ -41,4 +43,46 @@ def general(url):
                     print(colored("Server Details identified : " + res.headers['server'], "yellow"))
             except:
                 pass
-        # print("\n")
+
+def records_fetch(dom):
+    try:
+        print("Fetching SRF Records: ")
+        result = spf.SpfRecord.from_domain(dom)
+        print ("\t" + str(result))
+    except Exception as e:
+        print("\tNo Records Found")
+        pass
+    try:
+        print("Fetching DMARC Records: ")
+        result = dmarc.DmarcRecord.from_domain(dom)
+        print ("\t" + str(result))
+    except Exception as e:
+        print("\tNo Records Found")
+        pass
+    try:
+        print("Fetching CNAME Records: ")
+        result = dns.resolver.query(dom, 'CNAME')
+        for cnameval in result:
+            print ("\t" + str(cnameval.target))
+    except Exception as e:
+        print("\tNo Records Found")
+        pass
+    try:
+        print("Fetching MX Records: ")
+        res = dns.resolver.query(dom, 'MX')
+        for exdata in res:
+            print ("\t" + str(exdata.exchange))
+    except Exception as e:
+        print("\tNo Records Found")
+        pass
+    try:
+        print("Fetching SOA Records: ")
+        answers = dns.resolver.query(dom, 'SOA')
+        for rdata in answers:
+            print('\tserial: %s  tech: %s' % (rdata.serial, rdata.rname))
+            print('\trefresh: %s  retry: %s' % (rdata.refresh, rdata.retry))
+            print('\texpire: %s  minimum: %s' % (rdata.expire, rdata.minimum))
+            print('\tmname: %s' % (rdata.mname))
+    except Exception as e:
+        print("\tNo Records Found")
+        pass

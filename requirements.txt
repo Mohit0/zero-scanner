@@ -8,6 +8,9 @@ bs4
 idna
 datetime
 pyOpenSSL
+dns.resolver
+py-emailprotections==0.8.5
+
 re    
 urllib.parse
 os
