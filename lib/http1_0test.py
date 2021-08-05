@@ -34,7 +34,7 @@ def runner(dom):
         try:
             r = local(domain)
             if r != 0:
-                print("Internal IP detected: " + r.__str__()  + "  Sent request with HTTP/1.0 to " + domain + "\n")
+                print("Internal IP detected: " + r.__str__()  + "  Sent request with HTTP/1.0 to " + domain + "(Appears False Positive)")
                 break
         except Exception as e:
             print(e)

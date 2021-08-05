@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 import requests
 from urllib.parse import urlparse
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -11,7 +10,6 @@ from termcolor import colored
 import tldextract
 import os
 
-
 sys.path.insert(1, 'lib')
 import general
 import ssl_socket_upgraded
@@ -20,12 +18,8 @@ import http1_0test
 import popular_cve
 import XSS_scanner
 import aem
-
-
 sys.path.insert(1, 'scripts')
 import directory_listing
-
-
 
 #   VARIABLES HERE
 dom = ''
@@ -33,8 +27,6 @@ url = ''
 path = '/'
 port_num = 443
 digit = 0
-
-
 
 def exploiter():
     try:
@@ -50,14 +42,12 @@ def exploiter():
         print("Canceling script...")
         sys.exit(1)
 
-
-
 def standalone(port_num):
     try:
         #print("Passed Host Header")
-        host_header_injection.runner("https://" + url)
+        host_header_injection.runner("https://" + url + str(path))
     except Exception as e:
-        print("Exception with host Header Injection:  ")
+        print("Exception with Host Header Injection:  ")
         print(e)
     try:
         if digit <= 3:
@@ -75,20 +65,19 @@ def standalone(port_num):
     try:
         print(colored("Performing quick validation for XSS.","green"))
         XSS_scanner.scan_xss("https://" + url)
-        print("\n")
         #print("Passed XSS checks")
     except Exception as e:
         print("Exception with XSS scan script:  ")
-        print(e)
+        print(str(e))
     try:
-        #aem.aemrunner(dom + ":" + port_num)
-        print(colored("Not vulnerable to AEM vulnerability\n","green"))
+        aem.aemrunner(dom + ":" + port_num)
+        #print(colored("check passed \n","green"))
     except Exception as e:
         print("Exception with AEM Script:  ")
         print(e)
     try:
-        print("Directory Enumeration is commented out\n\n")
-        #directory_listing.dir_listing_runner(dom + ":" + port_num)
+        #print("Directory Enumeration is commented out\n\n")
+        directory_listing.dir_listing_runner(dom + ":" + port_num)
     except Exception as e:
         print("Exception with Dir Listing Script:  ")
         print(e)
@@ -141,10 +130,7 @@ def url_former_older():
     except Exception as e:
         print(e)
         print("\n")
-        pass    
-
-
-
+        pass
 
 def option2():
     global url, dom, port_num
@@ -177,6 +163,7 @@ if __name__ == '__main__':
         print("2. Continue with interactive terminal mode.")
         num = input("\nSelct an Option(1 or 2): ")
         if int(num) == 1:
+            print("URL Format is:  scheme://Host-address:IP/path_if_any")
             path = input("\nPlease provide the path to file: ")
             file = open(path.__str__().rstrip('\n'), "r")
             print("\n Fetching Scripts and Running Scanner\n\n")

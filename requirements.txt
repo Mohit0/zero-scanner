@@ -1,18 +1,17 @@
 docx
-requests
-sys
+requests==2.21.0
 tldextract                                            
 termcolor
-re    
-urllib.parse
 progressbar
 urlextract
 bs4
-os
-OpenSSL
 idna
-socket
 datetime
+pyOpenSSL
+re    
+urllib.parse
+os
+socket
 ssl
 json
 

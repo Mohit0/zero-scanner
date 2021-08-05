@@ -13,7 +13,6 @@ def get_all_forms(url):
     soup = bs(requests.get(url, verify=False, timeout=(10, 27)).content, "html.parser")
     return soup.find_all("form")
 
-
 def get_form_details(form):
     details = {}
     action = form.attrs.get("action").lower()

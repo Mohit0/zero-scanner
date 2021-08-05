@@ -14,13 +14,13 @@ def check_dir_listing(url):
 	#print(result.status_code)
 	if (result.status_code != 404) and (result.status_code != 302) and (result.status_code != 300) and (result.status_code != 301):
 		if "not found" not in result.content.__str__().lower():
-			print(colored('Predictable Resource Location: ' + url , "red" )) 
+			print(colored('Predictable Location: Size=' + str(len(result.content)) + " " + url , "red"))
 			if result.status_code == 200:
 				# print('In Directory Listing Function')
 				v1 = result.text
 				v2 = v1[v1.find('<title>') + 7 : v1.find('</title>')]
 				if 'index' in v2.__str__().lower():
-					print(colored("Also Vulnerable to Directory Listing","red"))
+					print(colored("Also Vulnerable to Directory Listing","white"))
 	
 
 def dir_listing_runner(domain):

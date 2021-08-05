@@ -29,7 +29,7 @@ def aemrunner(domain):
 	                k = 1 
 	        i = i + j
 	        if i == 10 and k == 0:
-	                print(colored("\tNot Vulnerable to AEM Vulnerability\n","green"))
+	                print("\tNot Vulnerable to AEM Vulnerability")
 	                break
 	    except Exception as e:
 	        print(e)

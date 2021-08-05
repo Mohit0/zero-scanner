@@ -34,7 +34,7 @@ def exploit(url, cmd):
             i = i+1
 
         if i < 30:
-            print(i)
+            print(out)
         else:
             print("Struts Not Found")
 

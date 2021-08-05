@@ -13,7 +13,7 @@ import json
 
 
 def check(url):
-    hearders = {'Host': 'HackeR.CoM', 'X-Forwarded-Host':'HackeR.CoM'}
+    hearders = {'Host': 'HackeR.CoM', 'X-Forwarded-Host':'HackeR.CoM','Connection': 'close'}
     try:
         res = requests.get(url, headers=hearders, allow_redirects=False, verify=False, timeout=(5, 27)) 
         print(colored("Found " + res.status_code.__str__() + " Response Code", "green"))

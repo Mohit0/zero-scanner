@@ -120,8 +120,6 @@ def analyze_ssl(host):
         context['SSL_Beast_Check'] = endpoint_data['details']['vulnBeast']
     print(json.dumps(context,sort_keys=False,indent=4))
 
-
-
 def ciphers(url,port_num):
     print(colored("\nExtracting Cipher Suites.  (Might take 60seconds to complete )", "green"))
     cmd = "nmap -Pn -p " + port_num + " --script ssl-enum-ciphers " + url
@@ -133,21 +131,20 @@ def ciphers(url,port_num):
             else:
                 print(line.replace('|', '').replace('   ', '').strip('\n'))
 
-    print(colored("\nChecking for SSL CCS Injection Vulnerability", "green"))
+    print(colored("Performing Additional SSL checks using NMap Library", "green"))
+    # print(colored("\nChecking for SSL CCS Injection Vulnerability", "green"))
     cmd = "nmap -Pn -p " + port_num + " --script ssl-ccs-injection " + url
     res = os.popen(cmd)
     for line in res:
         if "VULNERALE" in line and "State" in line:
             print("\tVulnerable to SSL CCS Injection Vulnerability")
 
-    print(colored("\nChecking for Heartbleed Vulnerability\n", "green"))
+    # print(colored("Checking for Heartbleed Vulnerability", "green"))
     cmd = "nmap -Pn -p " + port_num + " --script ssl-heartbleed " + url
     res = os.popen(cmd)
     for line in res:
         if "VULNERALE" in line and "State" in line:
             print("\tVulnerable to SSL HeartBleed Vulnerability")
-
-
 
 def runner(domain,port_num):
     try:
@@ -164,7 +161,7 @@ def runner(domain,port_num):
     try:
         analyze_ssl(domain)
     except Exception as e:
-        #print("Weak Network Identified. Skipping Cipher Suites Validation " )# + e.__str__())
+        print("Weak Network Identified. Skipping Cipher Suites Validation " + e.__str__())
         pass
 
 
