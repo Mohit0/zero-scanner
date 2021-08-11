@@ -67,6 +67,7 @@ def standalone(port_num):
     try:
         print(colored("Performing quick validation for XSS.","green"))
         XSS_scanner.scan_xss("https://" + url)
+        XSS_scanner.xss("https://" + url + "/")
         #print("Passed XSS checks")
     except Exception as e:
         print("Exception with XSS scan script:  ")

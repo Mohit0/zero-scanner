@@ -161,7 +161,7 @@ def runner(domain,port_num):
     try:
         analyze_ssl(domain)
     except Exception as e:
-        print("Weak Network Identified. Skipping Cipher Suites Validation " + e.__str__())
+        print("Server Errors Received. Skipping Cipher Suites Validation " + e.__str__())
         pass
 
 

