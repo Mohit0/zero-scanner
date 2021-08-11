@@ -8,7 +8,8 @@ from emailprotectionslib import spf,dmarc
 
 def general(url):
     hearders = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0',
-                'Origin': 'testing.for.cors.com'}
+                'Origin': 'testing.for.cors.com',
+                "LocaLss":"HHello_WWorld"}
     print(colored("Sending Requests to Server :  " + url, "green"))
     # print("\n")
     res = requests.get(url, headers=hearders, verify=False, timeout=(10, 27))
@@ -20,6 +21,8 @@ def general(url):
         print("Redirection Found to" + res.headers['Location'])
     if res.status_code:
         head = res.headers.__str__().lower()
+        if "wworld" and "localss" and "hhello" in head:
+            print("This site seems vulnerable to Cross Site Tracing (XST)")
         if 'x-frame-options' in head or 'frame-option' in head:
             value = res.headers['X-Frame-Options']
             value = value.__str__().lower()
@@ -46,21 +49,21 @@ def general(url):
 
 def records_fetch(dom):
     try:
-        print("Fetching SRF Records: ")
+        print(colored("Fetching SPF Records: ","green"))
         result = spf.SpfRecord.from_domain(dom)
         print ("\t" + str(result))
     except Exception as e:
         print("\tNo Records Found")
         pass
     try:
-        print("Fetching DMARC Records: ")
+        print(colored("Fetching DMARC Records: ","green"))
         result = dmarc.DmarcRecord.from_domain(dom)
         print ("\t" + str(result))
     except Exception as e:
         print("\tNo Records Found")
         pass
     try:
-        print("Fetching CNAME Records: ")
+        print(colored("Fetching CNAME Records: ","green"))
         result = dns.resolver.query(dom, 'CNAME')
         for cnameval in result:
             print ("\t" + str(cnameval.target))
@@ -68,7 +71,7 @@ def records_fetch(dom):
         print("\tNo Records Found")
         pass
     try:
-        print("Fetching MX Records: ")
+        print(colored("Fetching MX Records: ","green"))
         res = dns.resolver.query(dom, 'MX')
         for exdata in res:
             print ("\t" + str(exdata.exchange))
@@ -76,7 +79,7 @@ def records_fetch(dom):
         print("\tNo Records Found")
         pass
     try:
-        print("Fetching SOA Records: ")
+        print(colored("Fetching SOA Records: ","green"))
         answers = dns.resolver.query(dom, 'SOA')
         for rdata in answers:
             print('\tserial: %s  tech: %s' % (rdata.serial, rdata.rname))

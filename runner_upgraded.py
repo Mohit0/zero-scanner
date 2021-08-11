@@ -33,6 +33,7 @@ def exploiter():
         try:
             general.records_fetch(dom)
             general.general("https://" + url)
+
             print(colored("Performing SSL checks.","green"))
             ssl_socket_upgraded.runner(dom,port_num)
         except Exception as e:
